@@ -155,3 +155,54 @@ export default {
     </main>
 </template>
 ```
+
+# Renderizando condicionalmente
+
+### Tu pode usar a diretiva v-if para colocar uma condicao em uma tag, para redenrizar ela condicionalmente
+
+Exemplo
+
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul v-if="ingredientes.length" class="ingredientes-sua-lista"> <!--Aqui-->
+                <li v-for="ingrediente in ingredientes" :key="ingrediente" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+        </section>
+    </main>
+</template>
+```
+
+- Note que essa ul, só vai ser renderizada se o array ingredientes existir
+
+### Aí para tu renderizar algo, caso o if, esteja ativo, tu usa o v-else
+
+Exemplo
+
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul v-if="ingredientes.length" class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ingredientes" :key="ingrediente" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+
+            <p class="paragrafo lista-vazia" v-else>  <!--Aqui-->
+              <img src="../assets/images/icones/lista-vazia.svg" alt="Ícone de pesquisa">
+              Sua lista está vazia, selecione ingredientes para iniciar.
+            </p>
+        </section>
+    </main>
+</template>
+```
+
+-  Note qe caso o conteúdo de ingredientes, for vazio, o parágrafo vai ser renderizado com o uso do v-else
+
+#### Importante lembrar que o v-else tem q ser utilizado logo depois do v-if, caso isso não seja respeitado o v-else não irá funcionar!
