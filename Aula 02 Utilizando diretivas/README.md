@@ -268,3 +268,111 @@ export default {
 ```
 
 - Tu adicionou o último src
+
+# Fazendo uma requisição http
+
+- Tu vai usar uma funcao async para usar o fetch e enviar a resposta
+
+```ts
+//http/index.ts
+export async function obterCategorias() {
+  const resposta = await fetch(
+    "https://gist.githubusercontent.com/antonio-evaldo/002ad55e1cf01ef3fc6ee4feb9152964/raw/bf463b47860043da3b3604ca60cffc3ad1ba9865/categorias.json"
+  );
+
+  const categorias = await resposta.json();
+
+  return categorias;
+}
+
+```
+
+- Agora como tu tá usando uma função async, tu não vai usar ela dentro do data()
+- Para isso existe um método chamado created() que é criado depois do data()
+- Isso faz parte do ciclo de  vida de um componente do vue
+
+Exemplo
+
+```vue
+<script lang="ts">
+import { obterCategorias } from '@/http/index'
+
+export default {
+    data() {
+        return {
+            categorias: []
+
+        }
+    },
+    async created() {
+        this.categorias = await obterCategorias()
+    }
+}
+</script>
+```
+
+### Explicando o que está acontecendo
+
+- Você cria a função async para fazer os protocolos http
+- Dentro do componente tu cria o data() que é o responsável por receber os dados, ele vai ser criado ANTES do created()
+- Como o created() é criado depois do data(), tu vai poder usar as propriedades do data()
+- Dessa forma tu consegue definir para o categorias receber os dados que estão vindo do json lá do teu get do http
+
+
+### Observação interessante
+
+- Todas as propriedades dentro do data, são estados, reativas
+- Isso faz com que toda vez que o valor dela seja alterado, o componente é re-renderizado.
+
+# Tipando o http
+
+- É bem semelhante ao ts, tu cria a interface, importa ela e define na variável que tu quer.
+
+Exemplo
+
+```ts
+//src/interfaces/ICategoria.ts
+export default interface Icategoria {
+    nome: string;
+    ingredientes: string[];
+    imagem: string;
+}
+```
+
+```ts
+//http/index.ts
+import type ICategoria from "@/interfaces/ICategoria";
+
+export async function obterCategorias() {
+  const resposta = await fetch(
+    "https://gist.githubusercontent.com/antonio-evaldo/002ad55e1cf01ef3fc6ee4feb9152964/raw/bf463b47860043da3b3604ca60cffc3ad1ba9865/categorias.json"
+  );
+
+  const categorias: ICategoria[] = await resposta.json();
+
+  return categorias;
+}
+
+```
+
+### Tu também precisausar a interface, dentro do Data()
+
+```ts
+//src/components/SelecionarIngredientes.vue
+<script lang="ts">
+import { obterCategorias } from '@/http/index'
+import type ICategoria from '@/interfaces/ICategoria'
+
+export default {
+    data() {
+        return {
+            categorias: [] as ICategoria[]
+
+        }
+    },
+    async created() {
+        this.categorias = await obterCategorias()
+    }
+}
+</script>
+```
