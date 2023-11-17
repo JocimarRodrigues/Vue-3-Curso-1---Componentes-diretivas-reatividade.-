@@ -1,34 +1,35 @@
 <script lang="ts">
 import SelecionarIngredientes from './SelecionarIngredientes.vue';
+import Tag from './Tag.vue';
 
 export default {
-    data() {
-        return {
-            ingredientes: ['Alho', 'Manteiga', 'Orégano']
-        };
-    },
-    components: { SelecionarIngredientes }
+  data() {
+    return {
+      ingredientes: ['Alho', 'Manteiga', 'Orégano']
+    };
+  },
+  components: { SelecionarIngredientes, Tag }
 }
 </script>
 
 <template>
-    <main class="conteudo-principal">
-        <section>
-            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
-            <ul v-if="ingredientes.length" class="ingredientes-sua-lista">
-                <li v-for="ingrediente in ingredientes" :key="ingrediente" class="ingrediente">
-                    {{ ingrediente }} 
-                </li>
-            </ul>
+  <main class="conteudo-principal">
+    <section>
+      <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+      <ul v-if="ingredientes.length" class="ingredientes-sua-lista">
+        <li v-for="ingrediente in ingredientes" :key="ingrediente">
+          <Tag :texto="ingrediente" />
+        </li>
+      </ul>
 
-            <p class="paragrafo lista-vazia" v-else>
-              <img src="../assets/images/icones/lista-vazia.svg" alt="Ícone de pesquisa">
-              Sua lista está vazia, selecione ingredientes para iniciar.
-            </p>
-        </section>
+      <p class="paragrafo lista-vazia" v-else>
+        <img src="../assets/images/icones/lista-vazia.svg" alt="Ícone de pesquisa">
+        Sua lista está vazia, selecione ingredientes para iniciar.
+      </p>
+    </section>
 
-        <SelecionarIngredientes />
-    </main>
+    <SelecionarIngredientes />
+  </main>
 </template>
 
 <style scoped>
@@ -58,18 +59,6 @@ export default {
   flex-wrap: wrap;
 }
 
-.ingrediente {
-  display: inline-block;
-  border-radius: 0.5rem;
-  min-width: 4.25rem;
-  padding: 0.5rem;
-  text-align: center;
-    transition: 0.2s;
-    color: var(--creme, #FFFAF3);
-  background: var(--coral, #F0633C);
-  font-weight: 700;
-}
-
 .lista-vazia {
   display: flex;
   justify-content: center;
@@ -94,5 +83,4 @@ export default {
     gap: 4rem;
   }
 }
-
 </style>

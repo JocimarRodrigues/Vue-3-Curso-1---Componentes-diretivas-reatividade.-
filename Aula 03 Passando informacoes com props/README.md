@@ -134,3 +134,127 @@ Exemplo
 - Com o uso do v-bind e da template string, tu está definindo o caminho onde estão as imagens e depois o nome da imagem, q tu está recebendo como props
 - Dessa forma tu está fazendo um caminho dinamico para cada imagem
 
+# Reutilizando CSS
+
+- Olhe os dois componentes abaixo
+ConteudoPrincipal.vue
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul v-if="ingredientes.length" class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ingredientes" :key="ingrediente" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+
+            <p class="paragrafo lista-vazia" v-else>
+              <img src="../assets/images/icones/lista-vazia.svg" alt="Ícone de pesquisa">
+              Sua lista está vazia, selecione ingredientes para iniciar.
+            </p>
+        </section>
+
+        <SelecionarIngredientes />
+    </main>
+</template>
+```
+
+CardCategoria.vue
+```vue
+<template>
+    <article class="categoria">
+        <header class="categoria__cabecalho">
+            <img :src="`/imagens/icones/categorias_ingredientes/${categoria.imagem}`" alt="" class="categoria__imagem">
+
+            <h2 class="paragrafo-lg categoria__nome">{{ categoria.nome }}</h2>
+        </header>
+
+        <ul class="categoria__ingredientes">
+            <li v-for="ingrediente in categoria.ingredientes" :key="ingrediente">
+                {{ ingrediente }}
+            </li>
+        </ul>
+    </article>
+</template>
+```
+
+- Percebe, que os dois possuém uma ul, com praticamente a mesma estrutura?
+- Então para reutilizar o css nesses dois componentes o que tu vai fazer é criar um novo Componente chamado Tag
+- Esse componente vai receber um span, e  uma props para receber um texto, q nesse caasso vai ser é o ingrediente
+- Ai dentro do componente Tag tu vai fazer a estilização para ambos, o resultado vai ser esse:
+
+Resultado
+
+ConteudoPrincipal.vue
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul v-if="ingredientes.length" class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ingredientes" :key="ingrediente">
+                    <Tag :texto="ingrediente"/> <!--Aqui-->
+                </li>
+            </ul>
+
+            <p class="paragrafo lista-vazia" v-else>
+              <img src="../assets/images/icones/lista-vazia.svg" alt="Ícone de pesquisa">
+              Sua lista está vazia, selecione ingredientes para iniciar.
+            </p>
+        </section>
+
+        <SelecionarIngredientes />
+    </main>
+</template>
+```
+
+CardCategoria.vue
+```vue
+<template>
+    <article class="categoria">
+        <header class="categoria__cabecalho">
+            <img :src="`/imagens/icones/categorias_ingredientes/${categoria.imagem}`" alt="" class="categoria__imagem">
+
+            <h2 class="paragrafo-lg categoria__nome">{{ categoria.nome }}</h2>
+        </header>
+
+        <ul class="categoria__ingredientes">
+            <li v-for="ingrediente in categoria.ingredientes" :key="ingrediente">
+                <Tag :texto="ingrediente" /> <!--Aqui-->
+            </li>
+        </ul>
+    </article>
+</template>
+```
+
+Tag.vue
+```vue
+<script lang="ts">
+export default {
+    props: {
+        texto: { type: String, required: true }
+    }
+}
+</script>
+
+<template>
+    <span class="tag">
+        {{ texto }}
+    </span>
+</template>
+
+<style scoped>
+.tag {
+    display: inline-block;
+    border-radius: 0.5rem;
+    min-width: 4.25rem;
+    padding: 0.5rem;
+    text-align: center;
+    transition: 0.2s;
+    color: var(--creme, #FFFAF3);
+    background: var(--coral, #F0633C);
+    font-weight: 700;
+}
+</style>
+```
