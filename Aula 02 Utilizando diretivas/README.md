@@ -1,40 +1,208 @@
-# ./
+# Outra forma de tu exportar um componente é dessa forma:
 
-This template should help get you started developing with Vue 3 in Vite.
+# Sobre Diretivas
 
-## Recommended IDE Setup
+-  Uma diretiva do Vue é basicamente um atributo que sempre começa com v-.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+ConteudoPrincipal.vue
+```vue
+<script lang="ts">
+export default {}
+</script>
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
 ```
 
-### Compile and Hot-Reload for Development
+- Aí quando tu for no App.vue tu vai ter o auto complete do vscode, para esse componente
+App.vue
 
-```sh
-npm run dev
+```vue
+<script lang="ts">
+import Banner from './components/Banner.vue'
+import ConteudoPrincipal from './components/ConteudoPrincipal.vue';
+
+export default {
+  components: { Banner: Banner, ConteudoPrincipal }
+}
+</script>
+
+<template>
+  <Banner />
+  <ConteudoPrincipal />
+</template>
+
+
+
 ```
 
-### Type-Check, Compile and Minify for Production
+# V For
 
-```sh
-npm run build
+### O V for serve para tu não precisar repetir código html no Vue, ele funciona basicamente como um for do JavaScript, olhe o exemplo abaixo
+
+Com o V-For
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ['Alho', 'Manteiga', 'Orégano']" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+        </section>
+    </main>
+</template>
 ```
+
+Sem o V-For
+
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul class="ingredientes-sua-lista">
+                <li class="ingrediente">
+                    Alho
+                </li>
+                <li class="ingrediente">
+                    Manteiga
+                </li>
+                <li class="ingrediente">
+                    Óregano
+                </li>
+            </ul>
+        </section>
+    </main>
+</template>
+```
+
+### Notar que a forma acima não é a mais correta para alcançar esse resultado, a forma mais correta é tu criar um objeto dentro do script do componente e usar esse objeto no v-for
+
+## Exemplo
+
+- Lembrar que essa lógica precisa ser criada DENTRO do exprot default do componente
+
+```vue
+<script lang="ts">
+export default {
+    data() {
+        return {
+            ingredientes: ['Alho', 'Manteiga', 'Orégano']
+        }
+    }
+}
+</script>
+
+```
+
+### Aí refatorando o template, ficaria assim
+
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ingredientes" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+        </section>
+    </main>
+</template>
+```
+
+- Essa é a forma mais correta de se usar o v-for.
+
+# V-bind
+
+- O V-bind serve para tu pegar o "nome" do atributo de um v-for, para tu usar no key, de forma grosseira, ele pega o nome do item do for, para usar na key.
+
+### Exemplo
+
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ingredientes" v-bind:key="ingrediente" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+        </section>
+    </main>
+</template>
+```
+
+## Tem um atalho forma q é muito utilizado para usar o v-bind. Q em vez de tu escrever v-bind=key="value" tu escreve :key="value"
+
+### Exemplo
+
+```vue
+
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ingredientes" :key="ingrediente" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+        </section>
+    </main>
+</template>
+```
+
+# Renderizando condicionalmente
+
+### Tu pode usar a diretiva v-if para colocar uma condicao em uma tag, para redenrizar ela condicionalmente
+
+Exemplo
+
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul v-if="ingredientes.length" class="ingredientes-sua-lista"> <!--Aqui-->
+                <li v-for="ingrediente in ingredientes" :key="ingrediente" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+        </section>
+    </main>
+</template>
+```
+
+- Note que essa ul, só vai ser renderizada se o array ingredientes existir
+
+### Aí para tu renderizar algo, caso o if, esteja ativo, tu usa o v-else
+
+Exemplo
+
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul v-if="ingredientes.length" class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ingredientes" :key="ingrediente" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+
+            <p class="paragrafo lista-vazia" v-else>  <!--Aqui-->
+              <img src="../assets/images/icones/lista-vazia.svg" alt="Ícone de pesquisa">
+              Sua lista está vazia, selecione ingredientes para iniciar.
+            </p>
+        </section>
+    </main>
+</template>
+```
+
+-  Note qe caso o conteúdo de ingredientes, for vazio, o parágrafo vai ser renderizado com o uso do v-else
+
+#### Importante lembrar que o v-else tem q ser utilizado logo depois do v-if, caso isso não seja respeitado o v-else não irá funcionar!
