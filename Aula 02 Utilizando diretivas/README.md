@@ -114,3 +114,44 @@ export default {
 ```
 
 - Essa é a forma mais correta de se usar o v-for.
+
+# V-bind
+
+- O V-bind serve para tu pegar o "nome" do atributo de um v-for, para tu usar no key, de forma grosseira, ele pega o nome do item do for, para usar na key.
+
+### Exemplo
+
+```vue
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ingredientes" v-bind:key="ingrediente" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+        </section>
+    </main>
+</template>
+```
+
+## Tem um atalho forma q é muito utilizado para usar o v-bind. Q em vez de tu escrever v-bind=key="value" tu escreve :key="value"
+
+### Exemplo
+
+```vue
+
+<template>
+    <main class="conteudo-principal">
+        <section>
+            <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+            <ul class="ingredientes-sua-lista">
+                <li v-for="ingrediente in ingredientes" :key="ingrediente" class="ingrediente">
+                    {{ ingrediente }} 
+                </li>
+            </ul>
+        </section>
+    </main>
+</template>
+```
