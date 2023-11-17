@@ -406,3 +406,18 @@ ConteudoPrincipal.vue
   </main>
 </template>
 ```
+
+### Opção 3
+
+- Há uma outra sintaxe que pode ser usada para o condicional de classes q é usando uma lista de classes
+Tag.vue
+```vue
+<template> 
+  <span :class="['tag', { ativa }]">
+      {{ texto }}
+    </span>
+ </template>
+
+```
+
+-  Quando é um texto estático, ele será aplicado, e quando é um objeto, terá a mesma lógica de adicionar a classe se o valor booleano passado for true.
