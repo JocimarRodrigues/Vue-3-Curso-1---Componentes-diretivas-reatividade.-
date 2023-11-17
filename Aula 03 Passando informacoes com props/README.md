@@ -110,3 +110,27 @@ import type { PropType } from 'vue';
 </template>
 ```
 
+# Importando imagens dinamicamente
+
+- Tu vai usar o vbind com template string, informando o caminho das imagens e depois a props para referenciar cada imagem
+
+Exemplo
+
+```vue
+<template>
+    <article class="categoria">
+        <header class="categoria__cabecalho">
+            <img :src="`/imagens/icones/categorias_ingredientes/${categoria.imagem}`" alt="" class="categoria__imagem">
+        </header>
+    </article>
+</template>
+```
+
+### Vamos entender o que está acontecendo
+
+- Tu definiu um v-for para o Componente SelecionarIngredientes, esté v-for terá 12 itens
+- Tu passou  uma props para o componente CardCategoria, essa props é um objeto e dentro dela vai ter uma propriedade chamada imagem, que é uma string com o nome de uma imagem
+- Dentro da pasta public tem uma pasta de imagens, com cada  imagem tendo o mesmo nome do atributo imagem q vem da props, q  tu está recebendo no componente
+- Com o uso do v-bind e da template string, tu está definindo o caminho onde estão as imagens e depois o nome da imagem, q tu está recebendo como props
+- Dessa forma tu está fazendo um caminho dinamico para cada imagem
+
