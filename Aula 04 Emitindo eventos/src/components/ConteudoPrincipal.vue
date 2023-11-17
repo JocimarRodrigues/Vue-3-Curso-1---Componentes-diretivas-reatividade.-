@@ -9,7 +9,12 @@ export default {
       ingredientes: ['Alho', 'Manteiga', 'Orégano']
     };
   },
-  components: { SelecionarIngredientes, SuaLista }
+  components: { SelecionarIngredientes, SuaLista },
+  methods: {
+    adicionarIngrediente(ingrediente: string) {
+      this.ingredientes.push(ingrediente)
+    }
+  }
 }
 </script>
 
@@ -17,7 +22,7 @@ export default {
   <main class="conteudo-principal">
       <SuaLista :ingredientes="ingredientes" />
 
-      <SelecionarIngredientes />
+      <SelecionarIngredientes @adicionar-ingrediente="adicionarIngrediente"/>
   </main>
 </template>
 
