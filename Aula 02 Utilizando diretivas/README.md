@@ -1,5 +1,3 @@
-# Outra forma de tu exportar um componente é dessa forma:
-
 # Sobre Diretivas
 
 -  Uma diretiva do Vue é basicamente um atributo que sempre começa com v-.
@@ -207,6 +205,10 @@ Exemplo
 
 #### Importante lembrar que o v-else tem q ser utilizado logo depois do v-if, caso isso não seja respeitado o v-else não irá funcionar!
 
+
+
+
+### Módulo 07/aula 02
 
 # Outra forma de se obter os dados
 
