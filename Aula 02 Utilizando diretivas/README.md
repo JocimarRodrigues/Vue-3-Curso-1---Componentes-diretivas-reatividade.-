@@ -206,3 +206,63 @@ Exemplo
 -  Note qe caso o conteúdo de ingredientes, for vazio, o parágrafo vai ser renderizado com o uso do v-else
 
 #### Importante lembrar que o v-else tem q ser utilizado logo depois do v-if, caso isso não seja respeitado o v-else não irá funcionar!
+
+
+# Outra forma de se obter os dados
+
+- Essa forma é muito importante, porque ela vai ser bem semelhante para quando tu for pegar os dados vindos de uma API!!!
+
+- Para fazer isso, tu vai criar um arquivo e dentro dele tu vai criar e exportar uma função
+
+Exemplo
+
+```ts
+//http/index.ts
+export function obterCategoria() {
+    return [
+        [
+            {
+                "nome": "Laticínios e Ovos",
+                "ingredientes": ["Ovos", "Queijo", "Leite", "Manteiga", "Creme de Leite", "Iogurte", "Leite Condensado", "Sorvete"],
+                "rotulo": "laticinios_e_ovos"
+            },
+            {
+                "nome": "Farinhas e Fermentos",
+                "ingredientes": ["Farinha de trigo", "Polvilho", "Farinha de rosca", "Canjica", "Farinha de mandioca", "Fubá", "Linhaça", "Fermento químico"],
+                "rotulo": "farinhas_e_fermentos"
+            }
+        ]
+    ]
+}
+
+
+```
+
+## Agora dentro do Componente que tu quer usar esses dados, dentro do export default dele, tu vai passar essa função
+
+```vue
+<script lang="ts">
+import {obterCategorias} from '@/http/index'
+
+export default {
+    data() {
+        return {
+            categorias: obterCategorias()
+
+        }
+    }
+}
+</script>
+```
+- O @ serve para definir o caminho base como o src
+
+- Note que o @ do import é uma peculiadade do  vite, mas para isso funcionar e não dar erro no vscode, tu vai precisar definir isso no tsconfig.app.json, na pasta raíz
+
+```json
+{
+
+    "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/**/*.ts"],
+}
+```
+
+- Tu adicionou o último src
