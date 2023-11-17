@@ -258,3 +258,151 @@ export default {
 }
 </style>
 ```
+
+# Personalizando Estilos
+
+- Nesta aula tu vai aprender como aplicar estilos com condicionais
+- A forma para fazer isso no vue é:
+- Criar uma nova classe de estilo dentro do componente, no ex vai ser .tag.ativa
+Tag.vue
+```vue
+<style scoped>
+.tag {
+    display: inline-block;
+    border-radius: 0.5rem;
+    min-width: 4.25rem;
+    padding: 0.5rem;
+    text-align: center;
+    transition: 0.2s;
+    color: var(--cinza);
+    background: var(--cinza-claro);
+    font-weight: 400;
+}
+
+.tag.ativa { /* aqui */
+    color: var(--creme, #FFFAF3);
+    background: var(--coral, #F0633C);
+    font-weight: 700;
+}
+</style>
+```
+- Para tu fazer a condicional, tu vai usar uma nova props no componente de Tag, essa prop vai ser um boolean
+Tag.vue
+```vue
+<script lang="ts">
+export default {
+    props: {
+        texto: { type: String, required: true },
+        ativa: {type: Boolean, deefault: false} // Aqui
+    }
+}
+</script>
+```
+### Observação
+
+- O valor padrãp  de um Boolean para props já é false, então tu n precisa definir
+- Como a sintaxe é mais curta, tu só vai especificar o tipo da prop, não precisa abrir chaves, tu pode resumir
+Exemplo
+```vue
+<script lang="ts">
+export default {
+    props: {
+        texto: { type: String, required: true },
+        ativa: Boolean // Aqui
+    }
+}
+</script>
+```
+
+
+## Agora que tu já criou a classe e definiu a props tu pode usar ela condicionalmente com as seguitnes opcões
+
+### Opção 1
+
+- Tu pode usar o v-bind, dps class e esspecificar um valor para ela
+Exemplo
+```vue
+<script lang="ts">
+export default {
+    props: {
+        texto: { type: String, required: true },
+        ativa: {type: Boolean, deefault: false}
+    }
+}
+</script>
+
+<template>
+    <span class="tag" :class="{ativa : true}">
+        {{ texto }}
+    </span>
+</template>
+```
+
+### Opção 2
+
+- Tu pode definir o valor, dela direto do componente pai. Assim, deixando ela mais dinâmica.
+- Primeiro dentro do componente, tu vai definir para a condicionar, q ela vai receber esse valor da prop
+Tag.vue
+```vue
+<script lang="ts">
+export default {
+    props: {
+        texto: { type: String, required: true },
+        ativa: {type: Boolean, deefault: false}
+    }
+}
+</script>
+
+<template>
+    <span class="tag" :class="{ativa : ativa}">
+        {{ texto }}
+    </span>
+</template>
+```
+- Depois dentro do Componente Pai, tu vai enviar a prop
+ConteudoPrincipal.vue
+```vue
+<template>
+  <main class="conteudo-principal">
+    <section>
+      <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+      <ul v-if="ingredientes.length" class="ingredientes-sua-lista">
+        <li v-for="ingrediente in ingredientes" :key="ingrediente">
+          <Tag :texto="ingrediente" :ativa="true"/> <!--Aqui-->
+        </li>
+      </ul>
+
+      <p class="paragrafo lista-vazia" v-else>
+        <img src="../assets/images/icones/lista-vazia.svg" alt="Ícone de pesquisa">
+        Sua lista está vazia, selecione ingredientes para iniciar.
+      </p>
+    </section>
+
+    <SelecionarIngredientes />
+  </main>
+</template>
+```
+- Uma observação interessante, quando você tem uma prop q é um boolean e você quiser q ela seja true, tu não precisa especificar o true, basta apenas chamar ela.
+Ex
+ConteudoPrincipal.vue
+```vue
+<template>
+  <main class="conteudo-principal">
+    <section>
+      <span class="subtitulo-lg sua-lista-texto">Sua lista:</span>
+      <ul v-if="ingredientes.length" class="ingredientes-sua-lista">
+        <li v-for="ingrediente in ingredientes" :key="ingrediente">
+          <Tag :texto="ingrediente" ativa/> <!--Aqui-->
+        </li>
+      </ul>
+
+      <p class="paragrafo lista-vazia" v-else>
+        <img src="../assets/images/icones/lista-vazia.svg" alt="Ícone de pesquisa">
+        Sua lista está vazia, selecione ingredientes para iniciar.
+      </p>
+    </section>
+
+    <SelecionarIngredientes />
+  </main>
+</template>
+```
