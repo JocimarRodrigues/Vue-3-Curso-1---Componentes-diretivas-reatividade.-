@@ -335,3 +335,7 @@ export default {
   </main>
 </template>
 ```
+
+# Removendo um ingrediente da lista
+
+- Tu vai aplicar a mesma lógica, passando o ingrediente do comppoente pai para filho e quando chegar no componente de ConteudoPrincipal, tu vai usar o método filter para remover do array o item q tiver o mesmo nome do ingrediente q está sendo enviado.
