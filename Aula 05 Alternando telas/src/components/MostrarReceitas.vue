@@ -1,5 +1,5 @@
 <script lang="ts">
-import {itensDeLista1EstaoEmLista2} from '@/operacoes/listas'
+import {itensDeLista1EstaoEmLista2} from '../Operacoes/listas'
 import { obterReceitas } from '@/http';
 import type IReceita from '@/interfaces/IReceita';
 import BotaoPrincipal from './BotaoPrincipal.vue';
