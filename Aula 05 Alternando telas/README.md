@@ -181,3 +181,83 @@ export default {
   </main>
 </template>
 ```
+
+# Mantendo um componente vivo
+
+- Sabe quando tu passa uma prop para um componente, e depois vai para outro? O Componente anterior é removido da tela  e caso tu volte/re-rendize esse componente, ele vai perder os state, certo?
+- Então, o vue tem um componente que IMPEDE isso, mesmo q o componente q tenha os state seja removido,  quando tu voltar para ele os states ainda vão estar nele.
+
+### O Componente que vai fazer isso é o KeepAlive
+
+Exemplo
+ConteudoPrincipal.vue
+```vue
+<template>
+  <main class="conteudo-principal">
+    <SuaLista :ingredientes="ingredientes" />
+
+    <KeepAlive>
+
+      <SelecionarIngredientes v-if="conteudo === 'SelecionarIngredientes'" @adicionar-ingrediente="adicionarIngrediente"
+        @remover-ingrediente="removerIngrediente" @buscar-receitas="navegar('MostrarReceitas')" />
+
+      <MostrarReceitas v-else-if="conteudo === 'MostrarReceitas'" @editar-receitas="navegar('SelecionarIngredientes')" />
+
+    </KeepAlive>
+
+  </main>
+</template>
+```
+
+- O que esse componente faz é guardar esses componentes no cache, e quando tu pedir para renderizar novamente, ele só vai buscar na memória e renderizar novamente, mantendo os state.
+
+### Como selecionar os componentes que o KeepAlive, vai guardar no cache
+
+- Para fazer isso, tu vai atribuir um atributo chamado include="nome do componente"
+- Note também q tu precisa ir no Componente que tu quer armazenar e dentro do script dele, tu adicionar uma propriedade chamada name="nome do componente"
+
+Exemplo
+ConteudoPrincipal.vue
+```vue
+<template>
+  <main class="conteudo-principal">
+    <SuaLista :ingredientes="ingredientes" />
+
+    <KeepAlive include="SelecionarIngredientes"> <!--Aqui-->
+
+      <SelecionarIngredientes v-if="conteudo === 'SelecionarIngredientes'" @adicionar-ingrediente="adicionarIngrediente"
+        @remover-ingrediente="removerIngrediente" @buscar-receitas="navegar('MostrarReceitas')" />
+
+      <MostrarReceitas v-else-if="conteudo === 'MostrarReceitas'" @editar-receitas="navegar('SelecionarIngredientes')" />
+
+    </KeepAlive>
+
+  </main>
+</template>
+```
+
+SelecionarIngredientes.vue
+```vue
+<script lang="ts">
+import { obterCategorias } from '@/http/index'
+import type ICategoria from '@/interfaces/ICategoria'
+import CardCategoria from './CardCategoria.vue'
+import BotaoPrincipal from './BotaoPrincipal.vue';
+
+export default {
+    name: 'SelecionarIngredientes', // Aqui
+    data() {
+        return {
+            categorias: [] as ICategoria[]
+        };
+    },
+    async created() {
+        this.categorias = await obterCategorias();
+    },
+    components: { CardCategoria, BotaoPrincipal },
+    emits: ['adicionarIngrediente', 'removerIngrediente', 'buscarReceitas']
+}
+</script>
+```
+
+- Fazendo dessa forma o KeepAlive só vai armazenar no cache o  Componente SelecionarIngredientes, mesmo que o MostrarReceitas também esteja dentro dele.
