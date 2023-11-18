@@ -8,7 +8,7 @@ type Pagina = 'SelecionarIngredientes' | 'MostrarReceitas';
 export default {
   data() {
     return {
-      ingredientes: ['Alho', 'Manteiga', 'Orégano'],
+      ingredientes: [] as string[],
       conteudo: 'SelecionarIngredientes' as Pagina
     };
   },
@@ -33,9 +33,11 @@ export default {
     <SuaLista :ingredientes="ingredientes" />
 
     <SelecionarIngredientes v-if="conteudo === 'SelecionarIngredientes'" @adicionar-ingrediente="adicionarIngrediente"
-      @remover-ingrediente="removerIngrediente" @buscar-receitas="navegar('MostrarReceitas')"/>
+      @remover-ingrediente="removerIngrediente" @buscar-receitas="navegar('MostrarReceitas')" />
 
-    <MostrarReceitas v-else-if="conteudo === 'MostrarReceitas'" />
+    <MostrarReceitas v-else-if="conteudo === 'MostrarReceitas'" @editar-receitas="navegar('SelecionarIngredientes')"
+       />
+
   </main>
 </template>
 
