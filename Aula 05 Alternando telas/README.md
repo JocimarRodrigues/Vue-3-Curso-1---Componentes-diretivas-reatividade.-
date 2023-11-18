@@ -261,3 +261,130 @@ export default {
 ```
 
 - Fazendo dessa forma o KeepAlive só vai armazenar no cache o  Componente SelecionarIngredientes, mesmo que o MostrarReceitas também esteja dentro dele.
+
+# Criando lógica de buscar Receitas
+
+## Passo 1
+
+MostrarReceitas.vue
+```vue
+<script lang="ts">
+import { obterReceitas } from '@/http';
+import type IReceita from '@/interfaces/IReceita';
+import BotaoPrincipal from './BotaoPrincipal.vue';
+import CardReceita from './CardReceita.vue';
+import type { PropType } from 'vue';
+
+export default {
+  props: { // Aqui
+    ingredientes: {type: Array as PropType<string[]>, required: true}
+  },
+  data() {
+    return {
+      receitasEncontradas: [] as IReceita[]
+    };
+  },
+  async created() { // Aqui
+    const receitas = await obterReceitas();
+
+    this.receitasEncontradas = receitas.filter((receita) => {
+      // Lógica que verifica se posso fazer receita
+      // Todos os ingredientes de uma receita devem estar inclusos na minha lista de ingredientes
+      // Se sim, devemos retornar 'true' para essa funcao
+
+      const possoFazerReceita = itensDeLista1EstaoEmLista2(receita.ingredientes, this.ingredientes)
+
+      return possoFazerReceita;
+    });
+  },
+  components: { BotaoPrincipal, CardReceita },
+  emits: ['editarReceitas']
+}
+</script>
+```
+
+- Tu vai criar a lógica para filtrar as receitas, dentro desse componente
+- Notar q os ingredientes vão vir como props de outro componente
+- Tu vai criar uma outra funcão q vai ser a responsável por fazer uma busca na lista 1 e na lista 2 e caso o resultado for true, vai atribuir esse valor na variável possoFazerReceita
+- Por fim tu vai retornar como valor resultado da funcão a variável possoFazerReceita;
+
+## Passo 2
+
+ConteudoPrincipal.vue
+```vue
+<script lang="ts">
+import SelecionarIngredientes from './SelecionarIngredientes.vue';
+import SuaLista from './SuaLista.vue';
+import MostrarReceitas from './MostrarReceitas.vue'
+
+type Pagina = 'SelecionarIngredientes' | 'MostrarReceitas';
+
+export default {
+  data() {
+    return {
+      ingredientes: [] as string[],
+      conteudo: 'SelecionarIngredientes' as Pagina
+    };
+  },
+  components: { SelecionarIngredientes, SuaLista, MostrarReceitas },
+  methods: {
+    adicionarIngrediente(ingrediente: string) {
+      this.ingredientes.push(ingrediente)
+    },
+    removerIngrediente(ingrediente: string) {
+      this.ingredientes = this.ingredientes.filter(iLista => ingrediente !== iLista)
+    },
+    navegar(pagina: Pagina) {
+      this.conteudo = pagina;
+    }
+  },
+  emits: ['adicionarIngrediente', 'removerIngrediente']
+}
+</script>
+
+<template>
+  <main class="conteudo-principal">
+    <SuaLista :ingredientes="ingredientes" />
+
+    <KeepAlive include="SelecionarIngredientes">
+
+      <SelecionarIngredientes v-if="conteudo === 'SelecionarIngredientes'" @adicionar-ingrediente="adicionarIngrediente"
+        @remover-ingrediente="removerIngrediente" @buscar-receitas="navegar('MostrarReceitas')" /> <!--Aqui-->
+
+      <MostrarReceitas v-else-if="conteudo === 'MostrarReceitas'" :ingredientes="ingredientes" @editar-receitas="navegar('SelecionarIngredientes')" />
+
+    </KeepAlive>
+
+  </main>
+</template>
+```
+
+- Note que nesse componente você está passando a props para a funcão do passo 1
+
+## Passo 3
+
+- Tu vai criar dentro do src, uma pasta para criar a função  itensDeLista1EstaoEmLista2
+- A lógica dessa função vai ser:
+
+listas.ts
+```ts
+export function itensDeLista1EstaoEmLista2(lista1: unknown[], lista2: unknown[]) {
+    return lista1.every((itemLista1) => lista2.includes(itemLista1))
+}
+```
+
+### Tipo unknown
+- O tipo unknown é muito semelhante ao tipo any, com a diferença que ele é mais seguro, ele por exemplo impede a gente de acessar uma propriedade de lista 1 e 2 se a gente não souber o tipo da lista
+
+### Every
+- A Função every, recebe como parametro uma lógica e ela vai realizar essa lógica em todos os itens da lista, e só vai retornar um resultado true, caso todos os itens da lógica for true.
+
+### Resumindo
+
+- A funcao itensDeLista1EstaoEmLista2 recebe 2 listas, vai realizar uma busca na lista1 usando o every, percorrendo todos os itens dela, se nessa lista incluir os itens da Lista2, a função vai retornar um true.
+- Dessa forma concluindo a lógica de busca
+
+
+### Caso tenha dúvidas
+
+- O Link da aula em que tu realizou a lógica de busca é esse => https://cursos.alura.com.br/course/vue-3-componentes-diretivas-reatividade-framework/task/140947
