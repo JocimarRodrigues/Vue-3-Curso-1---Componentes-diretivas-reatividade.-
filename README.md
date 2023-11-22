@@ -1,6 +1,7 @@
 # Para tu iniciar um projeto em vue o cmd é:
 ```js
-npm create vue
+vue create "nome do projeto" // usando babel
+npm create vue // para criar um projeto usando vite
 //  Tu pode usar o @ para especificar uma versão específica do vue, exemplo: npm create vue@3.7.3
 ```
 
@@ -14,3 +15,12 @@ npm create vue
 # Ciclo de vida dos Componentes
 
 - https://www.alura.com.br/artigos/vuejs-ciclo-vida-componentes
+
+
+- <div>
+  <h1 align="center">
+     <a href="https://vue-3-curso-1-componentes-diretivas-reatividade.vercel.app/" target="_blank">
+         Visualizar Projeto
+     </a>
+  </h1>
+</div>
